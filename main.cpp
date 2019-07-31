@@ -5,6 +5,27 @@
 #include <string>
 #include <numeric>
 
+// h(x, a, b) = a + b * x
+// cost(a, b) = (1/2m)*sum((h(xi)-yi)^2)
+// goal: min(cost(a, b))
+//   i. e. find a, b such that the goal
+
+// Questions:
+// 1. why single optimum
+// 2. how to choose the learning rate
+// 3. how to normalize the data
+// 4. why covergence is when the derivitives are zero
+// 5. why do we do a = a - rate * derCostA(a, b)
+//                 b = b - rate * derCostB(a, b) 
+//    so as to descend
+// 6. should the rate be the same for both a and b
+// 7. should the rate be fixed
+// 8. what are the arguments of the der function,
+//    are they der(function, a, b, aOrb)
+// 9. what is a partial derivative,
+//    why do we use it here
+// 10.why cant we descend a and b separately
+
 struct Result{ double a = 0; double b = 0; };
 
 struct Data{ double x = 0; double y = 0; };
