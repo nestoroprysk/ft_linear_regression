@@ -15,9 +15,15 @@ static std::vector<Data> g_data;
 using Mileage = double;
 using Cost = double;
 
+static constexpr auto e = 0.00001;
+const auto eq = [](const auto a, const auto b)
+{ return std::abs(a - b) < e || std::abs(b - a) < e;
+};
+
 const auto h = [](const Mileage m, const auto a, const auto b) -> Cost
 { return a + b * m; };
 
+// Unused: derA and derB are the derivitives of the function
 const auto courseCostFunction = [](const auto a, const auto b) -> Cost
 { return (1.0 / (2.0 * g_data.size())) * 
   std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
@@ -37,37 +43,46 @@ Data parse(const std::string& line)
   line.cend(), ',')), line.cend()))) };
 }
 
-double g_a = 0;
-double g_b = 0;
+double g_learning_rate = 0.1;
 
-const auto minX = []{return std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
-[](const auto init, const auto& d){ return std::min(init, unnormalize(d.x)); });};
+const auto derA = []
+{ return (1.0 / g_data.size()) *
+  std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
+  [&](const auto init, const auto d)
+  { return init + h(d.x, g_result.a, g_result.b) - d.y; } );
+};
 
-const auto maxX = []{return std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
-[](const auto init, const auto& d){ return std::max(init, unnormalize(d.x)); });};
+const auto derB = []
+{ return (1.0 / g_data.size()) *
+  std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
+  [&](const auto init, const auto d)
+  { return init + (h(d.x, g_result.a, g_result.b) - d.y) * d.x; } );
+};
 
-const auto minY = []{return std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
-[](const auto init, const auto& d){ return std::min(init, unnormalize(d.y)); });};
+const auto newA = []
+{ return g_result.a - g_learning_rate * derA();
+};
 
-const auto maxY = []{return std::accumulate(g_data.cbegin(), g_data.cend(), double(0),
-[](const auto init, const auto& d){ return std::max(init, unnormalize(d.y)); });};
+const auto newB = []
+{ return g_result.b - g_learning_rate * derB();
+};
 
-const auto update = []{};
+const auto update = []
+{ const auto temp_a = newA();
+  const auto temp_b = newB();
+  if (eq(temp_a, g_result.a) && eq(temp_b, g_result.b))
+    return false;
+  g_result.a = temp_a;
+  g_result.b = temp_b;
+  return true;
+};
 
 int main()
 { auto d = std::ifstream("data.txt");
   {std::string s; std::getline(d, s);}
   for (std::string line; std::getline(d, line);)
     g_data.emplace_back(parse(line));
-  const auto nbIterations = 0;
-  auto minCost = std::numeric_limits<double>::max();
-  for (auto i = 0; i < nbIterations; ++i)
-  { const auto c = courseCostFunction(g_a, g_b);
-    g_result = c < minCost ? Result{ g_a, g_b } : g_result;
-    minCost = std::min(minCost, c);
-    update();
-  }
+  while (update());
   auto o = std::ofstream("line.txt");
-  o << g_result.a << ',' << g_result.b << std::endl;
-  return 0;
+  o << unnormalize(g_result.a) << ',' << g_result.b << std::endl;
 }
