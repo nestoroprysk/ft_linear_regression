@@ -34,8 +34,7 @@ public:
     Result unnormalise(const Result& i_result) const;
 private:
     const std::vector<Data> m_data;
-    const double m_coefficient_a;
-    const double m_coefficient_b;
+    const double m_coefficient;
 };
 
 }

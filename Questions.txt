@@ -12,3 +12,4 @@
 9. what is a partial derivative,
    why do we use it here
 10.why cant we descend a and b separately
+11.may we apply gradual descend to find alpha

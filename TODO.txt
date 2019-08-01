@@ -3,3 +3,4 @@
 3. async accumulate
 4. learn learning rate
 5. learn why the given devisor works
+6. assess learning rate via the gradual descend

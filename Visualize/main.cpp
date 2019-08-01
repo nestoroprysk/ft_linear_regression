@@ -4,15 +4,13 @@
 
 namespace {
 
-template <typename... Args>
-std::string collect(Args&&... args)
-{
-    const auto array = std::array<std::string, sizeof...(args)>{ std::forward<Args>(args)... };
+const auto collect = [](auto&&... args){
+    const auto array = std::array<std::string, sizeof...(args)>{ std::forward<decltype(args)>(args)... };
     auto result = std::string();
     for (const auto s : array)
         result += s + ' ';
     return result;
-}
+};
 
 }
 
