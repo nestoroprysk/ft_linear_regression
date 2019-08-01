@@ -1,0 +1,14 @@
+(i)   Learn executable sets a and b coefficients
+      based on the given data
+      Data should be in the format: <double>, <double>
+(ii)  Assess executable gives corresponding y to a given x
+      (e. g. given mileage, returns price)
+(iii) ShowPrecision executable 
+
+h(x, a, b) = a + b * x
+cost(a, b) = (1/2m)*sum((h(xi)-yi)^2)
+goal: min(cost(a, b))
+    where h is a hypothesis
+          a, b - coefficient to find
+
+Influenced by Stanford ML in Coursera

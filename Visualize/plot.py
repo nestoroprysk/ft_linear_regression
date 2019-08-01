@@ -1,9 +1,10 @@
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-file = open("data.txt", "r")
+dataFile = open(sys.argv[1], "r")
 
-xAndy = file.readline().split(",")
+xAndy = dataFile.readline().split(",")
 
 plt.xlabel(xAndy[0])
 plt.ylabel(xAndy[1])
@@ -11,14 +12,14 @@ plt.title("Data")
 
 xs = []
 ys = []
-for line in file:
+for line in dataFile:
 	kmAndPrice = line.split(",")
 	xs.append(int(kmAndPrice[0]))
 	ys.append(int(kmAndPrice[1]))
 
 plt.scatter(xs, ys)
 
-lineFile = open("line.txt", "r")
+lineFile = open(sys.argv[2], "r")
 
 aAndB = lineFile.readline().split(",")
 
