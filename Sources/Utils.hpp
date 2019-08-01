@@ -39,4 +39,6 @@ private:
 
 Utils::Data parseLine(const std::string& line);
 
+std::pair<double, double> getCoefficients();
+
 }

@@ -150,3 +150,12 @@ Utils::Data Utils::parseLine(const std::string& line)
                 line.cend(), ',')), line.cend()))
     };
 }
+
+
+std::pair<double, double> Utils::getCoefficients()
+{
+    auto lineFile = std::ifstream(Utils::getFullPathToBuildDir("line.txt"));
+    std::string line; std::getline(lineFile, line);
+    const auto [a, b] = Utils::parseLine(line);
+    return { a, b };
+}

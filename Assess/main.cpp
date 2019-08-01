@@ -1,32 +1,27 @@
 #include <Utils.hpp>
 
 #include <iostream>
-#include <fstream>
 
 namespace {
 
-const auto getData = []{
-    const auto dataFile = Utils::getFullPathToRootDir("data.txt");
-    return Utils::parse(dataFile);
-};
+static constexpr auto g_usage = R"(
+Usage:
+    ./Assess x
+)";
 
-const auto getCoefficients = []{
-    auto lineFile = std::ifstream(Utils::getFullPathToBuildDir("line.txt"));
-    std::string line; std::getline(lineFile, line);
-    return Utils::parseLine(line);
-};
+}
 
-};
-
-int main()
+int main(const int argc, const char** argv)
 {
     try{
-        const auto [a, b] = getCoefficients();
-        std::cout << "cost for a = [" << a <<
-            "] and b = [" << b << "] is [" <<
-                Utils::cost(getData(), a, b) << ']' << std::endl;
+        if (argc != 2)
+            throw std::out_of_range("");
+        const auto x = std::stod(argv[1]);
+        const auto [a, b] = Utils::getCoefficients();
+        std::cout << "for [" << x << "] y is [" <<
+            Utils::h(x, a, b) << ']' << std::endl; 
     }
-    catch (...){
-        std::cout << "Unable to assess" << std::endl;
+    catch(...){
+        std::cout << g_usage << std::endl;
     }
 }
