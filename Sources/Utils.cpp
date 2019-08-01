@@ -39,19 +39,6 @@ double Utils::cost(const std::vector<Data>& i_data, const double a, const double
                 { return init + std::pow(h(d.x, a, b) - d.y, 2); } );
 }
 
-namespace {
-
-Utils::Data parseLine(const std::string& line)
-{
-    return { std::stod(std::string(line.cbegin(),
-                std::find(line.cbegin(), line.cend(), ','))),
-             std::stod(std::string(std::next(std::find(line.cbegin(),
-                line.cend(), ',')), line.cend()))
-    };
-}
-
-}
-
 std::vector<Utils::Data> Utils::parse(const std::string& i_file_name)
 {
     auto result = std::vector<Data>();
@@ -153,4 +140,13 @@ std::vector<Utils::Data> Utils::Normaliser::normalise() const
 Utils::Result Utils::Normaliser::unnormalise(const Result& i_result) const
 {
     return { i_result.a * m_coefficient, i_result.b };
+}
+
+Utils::Data Utils::parseLine(const std::string& line)
+{
+    return { std::stod(std::string(line.cbegin(),
+                std::find(line.cbegin(), line.cend(), ','))),
+             std::stod(std::string(std::next(std::find(line.cbegin(),
+                line.cend(), ',')), line.cend()))
+    };
 }

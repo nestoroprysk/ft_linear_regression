@@ -37,4 +37,6 @@ private:
     const double m_coefficient;
 };
 
+Utils::Data parseLine(const std::string& line);
+
 }
