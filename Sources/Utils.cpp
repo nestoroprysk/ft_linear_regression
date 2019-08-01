@@ -43,6 +43,8 @@ std::vector<Utils::Data> Utils::parse(const std::string& i_file_name)
 {
     auto result = std::vector<Data>();
     auto file = std::ifstream(i_file_name);
+    if (!file)
+        throw std::logic_error("Cannot open the file [" + i_file_name + ']');
     { std::string s; std::getline(file, s); }
     for (std::string line; std::getline(file, line);)
         result.emplace_back(parseLine(line));
@@ -103,6 +105,8 @@ double Utils::abs(const double a)
 void Utils::save(const Result& i_result)
 {
     auto file = std::ofstream("line.txt");
+    if (!file)
+        throw std::logic_error("Cannot open the file [line.txt] for writing");
     file << i_result.a << ',' << i_result.b << std::endl;
 }
 
