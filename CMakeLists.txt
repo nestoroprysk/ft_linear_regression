@@ -80,4 +80,5 @@ target_include_directories(RunUnitTests PUBLIC ${SourcesDir})
 
 add_definitions(-DPATH_TO_BUILD_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Build")
 add_definitions(-DPATH_TO_VISUALIZE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Visualize")
-add_definitions(-DPATH_ROOT_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+add_definitions(-DPATH_TO_ROOT_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+add_definitions(-DPATH_TO_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/Data")

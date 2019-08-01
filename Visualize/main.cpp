@@ -20,8 +20,8 @@ int main()
     try{
         const auto python = std::string("python");
         const auto visualizer = Utils::getFullPathToVisualizeDir("plot.py");
-        const auto dataFile = Utils::getFullPathToRootDir("data.txt");
-        const auto lineFile = Utils::getFullPathToBuildDir("line.txt");
+        const auto dataFile = Utils::getDataFileFullName();
+        const auto lineFile = Utils::getLineFileFullName();
         system(collect(python, visualizer, dataFile, lineFile).c_str());
     }
     catch(...){

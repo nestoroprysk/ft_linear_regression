@@ -3,7 +3,8 @@
       Data should be in the format: <double>, <double>
 (ii)  Assess executable gives corresponding y to a given x
       (e. g. given mileage, returns price)
-(iii) ShowPrecision executable 
+(iii) ShowPrecision executable displays a precision
+(iv)  Visualise executable visualises data and the resulting line
 
 h(x, a, b) = a + b * x
 cost(a, b) = (1/2m)*sum((h(xi)-yi)^2)

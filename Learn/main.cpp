@@ -4,7 +4,6 @@
 
 namespace {
 
-static constexpr auto g_data_file_name = "data.txt";
 static constexpr auto g_learning_rate = double(1.66624);
 
 const auto run = [](const auto& normaliser){
@@ -15,13 +14,22 @@ const auto run = [](const auto& normaliser){
     return normaliser.unnormalise(result);
 };
 
+const auto getFileFullName = [](const auto argc, const auto** argv){
+    static constexpr auto g_default_data_file_name = "subjectData.txt";
+    if (argc != 2)
+        return Utils::getFullPathToDataDir(g_default_data_file_name);
+    return Utils::getFullPathToDataDir(argv[1]);
+};
+
 }
 
-int main()
+int main(const int argc, const char** argv)
 {
     try{
         using namespace Utils;
-        const auto normaliser = Normaliser(parse(getFullPathToRootDir(g_data_file_name)));
+        const auto fileFullName = getFileFullName(argc, argv);
+        save(fileFullName);
+        const auto normaliser = Normaliser(parse(fileFullName));
         const auto result = run(normaliser);
         save(result);
         std::cout << "a: [" << result.a << ']' << std::endl;
