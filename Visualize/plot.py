@@ -14,9 +14,9 @@ try:
     xs = []
     ys = []
     for line in dataFile:
-    	kmAndPrice = line.split(",")
-    	xs.append(int(kmAndPrice[0]))
-    	ys.append(int(kmAndPrice[1]))
+    	xAndY = line.split(",")
+    	xs.append(float(xAndY[0]))
+    	ys.append(float(xAndY[1]))
 
     plt.scatter(xs, ys)
 
@@ -28,9 +28,6 @@ try:
 
     x = [minX, maxX]
     y = [yMinX, yMaxX]
-
-    plt.xlim(minX, maxX)
-    plt.ylim(yMinX, yMaxX)
 
     plt.plot(x, y)
 

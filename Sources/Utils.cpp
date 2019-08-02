@@ -203,14 +203,14 @@ double Utils::assess(const double x)
 
 double Utils::max(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get)
 {
-    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
+    return std::accumulate(i_data.cbegin(), i_data.cend(), std::numeric_limits<double>::min(),
         [&](const auto init, const auto& d){ return std::max(init, i_get(d));
     });
 };
 
 double Utils::min(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get)
 {
-    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
+    return std::accumulate(i_data.cbegin(), i_data.cend(), std::numeric_limits<double>::max(),
         [&](const auto init, const auto& d){ return std::min(init, i_get(d));
     });
 };
