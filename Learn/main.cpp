@@ -8,7 +8,7 @@ namespace {
 static constexpr auto g_learning_rate = double(0.0252);
 
 const auto run = [](const auto& i_data){
-    auto result = Utils::Result();
+    auto result = std::pair<double, double>(0, 0);
     while (auto opt_result = update(i_data, result, g_learning_rate))
         result = *opt_result;
     return result;
@@ -31,8 +31,8 @@ int main(const int argc, const char** argv)
         save(fileFullName);
         const auto result = run(normalise(parse(fileFullName)));
         save(result);
-        std::cout << "a: [" << result.a << ']' << std::endl;
-        std::cout << "b: [" << result.b << ']' << std::endl;
+        std::cout << "a: [" << result.first << ']' << std::endl;
+        std::cout << "b: [" << result.second << ']' << std::endl;
     }
     catch (const std::logic_error& e){
         std::cout << e.what() << std::endl;

@@ -15,15 +15,15 @@ std::string getFileToSaveDataFilePathName()
 }
 
 double newA(const std::vector<Utils::Data>& i_data,
-                                const Utils::Result& i_result, const double i_learning_rate)
+                                const std::pair<double, double>& i_result, const double i_learning_rate)
 {
-    return i_result.a - i_learning_rate * costDerivativeA(i_data, i_result);
+    return i_result.first - i_learning_rate * costDerivativeA(i_data, i_result);
 }
 
 double newB(const std::vector<Utils::Data>& i_data,
-                                const Utils::Result& i_result, const double i_learning_rate)
+                                const std::pair<double, double>& i_result, const double i_learning_rate)
 {
-    return i_result.b - i_learning_rate * constDerivativeB(i_data, i_result);
+    return i_result.second - i_learning_rate * constDerivativeB(i_data, i_result);
 }
 
 }
@@ -72,13 +72,13 @@ std::string Utils::getLineFileFullName()
     return  Utils::getFullPathToBuildDir(g_file_to_save_line_to);
 }
 
-void Utils::save(const Result& i_result)
+void Utils::save(const std::pair<double, double>& i_result)
 {
     auto file = std::ofstream(getLineFileFullName());
     if (!file)
         throw std::logic_error("Cannot open the file [" + std::string(getFileToSaveDataFilePathName()) +
                 " for writing");
-    file << i_result.a << ',' << i_result.b << std::endl;
+    file << i_result.first << ',' << i_result.second << std::endl;
 }
 
 void Utils::save(const std::string& i_file_name)
@@ -124,34 +124,34 @@ double Utils::cost(const std::vector<Data>& i_data, const double a, const double
                 { return init + std::pow(h(d.x, a, b) - d.y, 2); } );
 }
 
-double Utils::costDerivativeA(const std::vector<Data>& i_data, const Result& i_result)
+double Utils::costDerivativeA(const std::vector<Data>& i_data, const std::pair<double, double>& i_result)
 {
     return (1.0 / i_data.size()) *
         std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
             [&](const auto init, const auto d)
-                { return init + h(d.x, i_result.a, i_result.b) - d.y; } );
+                { return init + h(d.x, i_result.first, i_result.second) - d.y; } );
 }
 
-double Utils::constDerivativeB(const std::vector<Data>& i_data, const Result& i_result)
+double Utils::constDerivativeB(const std::vector<Data>& i_data, const std::pair<double, double>& i_result)
 {
     return (1.0 / i_data.size()) *
         std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
             [&](const auto init, const auto d)
-                { return init + (h(d.x, i_result.a, i_result.b) - d.y) * d.x; } );
+                { return init + (h(d.x, i_result.first, i_result.second) - d.y) * d.x; } );
 }
 
-std::optional<Utils::Result> Utils::update(const std::vector<Utils::Data>& i_data,
-                                            const Result& i_result, const double i_learning_rate)
+std::optional<std::pair<double, double>> Utils::update(const std::vector<Utils::Data>& i_data,
+                                            const std::pair<double, double>& i_result, const double i_learning_rate)
 {
-    if (std::isinf(i_result.a) || std::isinf(i_result.b))
+    if (std::isinf(i_result.first) || std::isinf(i_result.second))
         return {};
-    if (std::isnan(i_result.a) || std::isnan(i_result.b))
+    if (std::isnan(i_result.first) || std::isnan(i_result.second))
         return {};
     const auto a = newA(i_data, i_result, i_learning_rate);
     const auto b = newB(i_data, i_result, i_learning_rate);
-    if (eq(a, i_result.a) && eq(b, i_result.b))
+    if (eq(a, i_result.first) && eq(b, i_result.second))
         return {};
-    return Result{a, b};
+    return std::pair<double, double>{a, b};
 }
 
 bool Utils::eq(const double a, const double b)
