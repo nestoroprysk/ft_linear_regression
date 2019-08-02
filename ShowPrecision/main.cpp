@@ -7,10 +7,10 @@ int main()
     try{
         using namespace Utils;
         const auto [a, b] = getCoefficients();
-        const auto data = normalise(parse(getDataFileFullName()));
+        const auto normalised_data = normalise(parse(getDataFileFullName()));
         std::cout << "cost for a = [" << a <<
             "] and b = [" << b << "] is [" <<
-                cost(data, a, b) << ']' << std::endl;
+                cost(normalised_data, a, b) << ']' << std::endl;
     }
     catch (const std::logic_error& e){
         std::cout << e.what() << std::endl;

@@ -38,4 +38,9 @@ std::vector<Data> normalise(const std::vector<Data>& i_data);
 double normalise(const std::vector<Data>& i_prior_data, const double x);
 double unnormalise(const std::vector<Data>& i_prior_data, const double y);
 
+double assess(const double x);
+
+double max(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get);
+double min(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get);
+
 }

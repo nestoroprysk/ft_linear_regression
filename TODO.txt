@@ -4,3 +4,7 @@
 4. learn learning rate
 5. learn why the given devisor works
 6. assess learning rate via the gradual descend
+7. rename line file to coefficients file
+8. delete data and make two lists
+9. make normalise and unnormalise cohesive
+10.use cost of the subject

@@ -26,18 +26,6 @@ double newB(const std::vector<Utils::Data>& i_data,
     return i_result.b - i_learning_rate * constDerivativeB(i_data, i_result);
 }
 
-const auto max = [](const auto& i_data, const auto& i_get){
-    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
-        [&](const auto init, const auto& d){ return std::max(init, i_get(d));
-    });
-};
-
-const auto min = [](const auto& i_data, const auto& i_get){
-    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
-        [&](const auto init, const auto& d){ return std::min(init, i_get(d));
-    });
-};
-
 }
 
 std::string Utils::getFullPathToBuildDir(const std::string& i_file_name)
@@ -204,3 +192,25 @@ double Utils::unnormalise(const std::vector<Data>& i_prior_data, const double y)
     const auto maxY = max(i_prior_data, [](const auto& d){return d.y;});
     return y * (maxY - minY) + minY;
 }
+
+double Utils::assess(const double x)
+{
+    const auto prior_data = parse(getDataFileFullName());
+    const auto [a, b] = getCoefficients();
+    const auto normalised_y = h(normalise(prior_data, x), a, b);
+    return unnormalise(prior_data, normalised_y);
+}
+
+double Utils::max(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get)
+{
+    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
+        [&](const auto init, const auto& d){ return std::max(init, i_get(d));
+    });
+};
+
+double Utils::min(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get)
+{
+    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
+        [&](const auto init, const auto& d){ return std::min(init, i_get(d));
+    });
+};

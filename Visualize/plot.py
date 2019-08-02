@@ -20,15 +20,17 @@ try:
 
     plt.scatter(xs, ys)
 
-    lineFile = open(sys.argv[2], "r")
+    minX = float(sys.argv[2])
+    yMinX = float(sys.argv[3])
 
-    aAndB = lineFile.readline().split(",")
+    maxX = float(sys.argv[4])
+    yMaxX = float(sys.argv[5])
 
-    a = float(aAndB[0])
-    b = float(aAndB[1])
+    x = [minX, maxX]
+    y = [yMinX, yMaxX]
 
-    x = np.linspace(min(xs), max(xs))
-    y = a + b * x
+    plt.xlim(minX, maxX)
+    plt.ylim(yMinX, yMaxX)
 
     plt.plot(x, y)
 
