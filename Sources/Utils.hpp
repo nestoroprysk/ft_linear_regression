@@ -18,27 +18,27 @@ std::string getLineFileFullName();
 void save(const std::pair<double, double>& i_result);
 void save(const std::string& i_file_name);
 
-std::vector<std::pair<double, double>> parse(const std::string& i_file_name);
+std::pair<std::vector<double>, std::vector<double>> parse(const std::string& i_file_name);
 std::pair<double, double> parseLine(const std::string& line);
 
 double h(const double x, const double a, const double b);
-double cost(const std::vector<std::pair<double, double>>& i_data, const double a, const double b);
-double costDerivativeA(const std::vector<std::pair<double, double>>& i_data, const std::pair<double, double>& i_result);
-double constDerivativeB(const std::vector<std::pair<double, double>>& i_data, const std::pair<double, double>& i_result);
-std::optional<std::pair<double, double>> update(const std::vector<std::pair<double, double>>& i_data,
+double cost(const std::vector<double>& i_xs, const std::vector<double>& i_ys, const double a, const double b);
+double costDerivativeA(const std::vector<double>& i_xs, const std::vector<double>& i_ys, const std::pair<double, double>& i_result);
+double constDerivativeB(const std::vector<double>& i_xs, const std::vector<double>& i_ys, const std::pair<double, double>& i_result);
+std::optional<std::pair<double, double>> update(const std::vector<double>& i_xs, const std::vector<double>& i_ys,
                                 const std::pair<double, double>& i_result, const double i_learning_rate);
 
 bool eq(const double a, const double b);
 double abs(const double a);
 
-std::vector<std::pair<double, double>> normalise(const std::vector<std::pair<double, double>>& i_data);
-double normalise(const std::vector<std::pair<double, double>>& i_prior_data, const double x);
-double unnormalise(const std::vector<std::pair<double, double>>& i_prior_data, const double y);
+std::vector<double> normalise(const std::vector<double>& i_data);
+double normalise(const std::vector<double>& i_prior_data, const double n);
+double unnormalise(const std::vector<double>& i_prior_data, const double n);
 
 double assess(const double x);
 
-double max(const std::vector<std::pair<double, double>>& i_data, const std::function<double(const std::pair<double, double>&)>& i_get);
-double min(const std::vector<std::pair<double, double>>& i_data, const std::function<double(const std::pair<double, double>&)>& i_get);
+double max(const std::vector<double>& i_data);
+double min(const std::vector<double>& i_data);
 
 double precision(const double a, const double b);
 
