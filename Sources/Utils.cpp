@@ -214,3 +214,9 @@ double Utils::min(const std::vector<Data>& i_data, const std::function<double(co
         [&](const auto init, const auto& d){ return std::min(init, i_get(d));
     });
 };
+
+double Utils::precision(const double a, const double b)
+{
+    const auto normalised_data = normalise(parse(getDataFileFullName()));
+    return cost(normalised_data, a, b);
+}

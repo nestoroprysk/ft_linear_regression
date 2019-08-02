@@ -43,4 +43,6 @@ double assess(const double x);
 double max(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get);
 double min(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get);
 
+double precision(const double a, const double b);
+
 }

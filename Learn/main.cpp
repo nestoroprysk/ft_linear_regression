@@ -4,7 +4,8 @@
 
 namespace {
 
-static constexpr auto g_learning_rate = double(0.1);
+// experimentally induced
+static constexpr auto g_learning_rate = double(0.0252);
 
 const auto run = [](const auto& i_data){
     auto result = Utils::Result();
