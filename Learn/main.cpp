@@ -8,7 +8,7 @@ namespace {
 static constexpr auto g_learning_rate = double(0.0252);
 
 const auto run = [](const auto& i_xs, const auto& i_ys){
-    auto result = std::pair<double, double>(0, 0);
+    auto result = Pair(0, 0);
     while (auto opt_result = Utils::update(i_xs, i_ys, result, g_learning_rate))
         result = *opt_result;
     return result;

@@ -6,21 +6,22 @@
 namespace {
 
 const auto collect = [](auto&&... args){
-    const auto array = std::array<std::string, sizeof...(args)>{ std::forward<decltype(args)>(args)... };
+    const auto array = std::array<std::string, sizeof...(args)>
+            { std::forward<decltype(args)>(args)... };
     auto result = std::string();
     for (const auto s : array)
         result += s + ' ';
     return result;
 };
 
-const auto getFirstPoint = []()->std::pair<double, double>{
+const auto getFirstPoint = []()->Pair{
     const auto dataFile = Utils::getDataFileFullName();
     const auto [xs, _] = Utils::parse(dataFile);
     const auto min_x = Utils::min(xs);
     return { min_x, Utils::assess(min_x) };
 };
 
-const auto getSecondPoint = []()->std::pair<double, double>{
+const auto getSecondPoint = []()->Pair{
     const auto dataFile = Utils::getDataFileFullName();
     const auto [xs, _] = Utils::parse(dataFile);
     const auto max_x = Utils::max(xs);
