@@ -34,15 +34,8 @@ std::optional<Result> update(const std::vector<Data>& i_data,
 bool eq(const double a, const double b);
 double abs(const double a);
 
-class Normaliser
-{
-public:
-    Normaliser(std::vector<Data> i_data);
-    std::vector<Data> normalise() const;
-    Result unnormalise(const Result& i_result) const;
-private:
-    const std::vector<Data> m_data;
-    const double m_coefficient;
-};
+std::vector<Data> normalise(const std::vector<Data>& i_data);
+double normalise(const std::vector<Data>& i_prior_data, const double x);
+double unnormalise(const std::vector<Data>& i_prior_data, const double y);
 
 }

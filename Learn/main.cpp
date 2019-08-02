@@ -4,14 +4,13 @@
 
 namespace {
 
-static constexpr auto g_learning_rate = double(1.66624);
+static constexpr auto g_learning_rate = double(0.1);
 
-const auto run = [](const auto& normaliser){
-    const auto data = normaliser.normalise();
+const auto run = [](const auto& i_data){
     auto result = Utils::Result();
-    while (auto opt_result = update(data, result, g_learning_rate))
+    while (auto opt_result = update(i_data, result, g_learning_rate))
         result = *opt_result;
-    return normaliser.unnormalise(result);
+    return result;
 };
 
 const auto getFileFullName = [](const auto argc, const auto** argv){
@@ -29,13 +28,12 @@ int main(const int argc, const char** argv)
         using namespace Utils;
         const auto fileFullName = getFileFullName(argc, argv);
         save(fileFullName);
-        const auto normaliser = Normaliser(parse(fileFullName));
-        const auto result = run(normaliser);
+        const auto result = run(normalise(parse(fileFullName)));
         save(result);
         std::cout << "a: [" << result.a << ']' << std::endl;
         std::cout << "b: [" << result.b << ']' << std::endl;
     }
-    catch (const std::logic_error e){
+    catch (const std::logic_error& e){
         std::cout << e.what() << std::endl;
     }
     catch (...){

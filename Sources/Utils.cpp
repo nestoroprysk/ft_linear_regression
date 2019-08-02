@@ -32,12 +32,10 @@ const auto max = [](const auto& i_data, const auto& i_get){
     });
 };
 
-const auto avg = [](auto... args)
-{
-    const auto array = std::array<double, sizeof...(args)>{args...};
-    return std::accumulate(array.begin(), array.end(), double(0), 
-        [](const auto a, const auto b){ return a + b; }
-    ) / static_cast<double>(array.size());
+const auto min = [](const auto& i_data, const auto& i_get){
+    return std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
+        [&](const auto init, const auto& d){ return std::min(init, i_get(d));
+    });
 };
 
 }
@@ -178,20 +176,31 @@ double Utils::abs(const double a)
     return a < 0.0 ? -a : a;
 }
 
-Utils::Normaliser::Normaliser(std::vector<Data> i_data)
-    : m_data(std::move(i_data))
-    , m_coefficient(avg(max(m_data, [](const auto& d){ return d.x;}), max(m_data, [](const auto& d){ return d.x;})))
-{}
-
-std::vector<Utils::Data> Utils::Normaliser::normalise() const
+std::vector<Utils::Data> Utils::normalise(const std::vector<Data>& i_data)
 {
+    const auto minX = min(i_data, [](const auto& d){return d.x;});
+    const auto maxX = max(i_data, [](const auto& d){return d.x;});
+    const auto minY = min(i_data, [](const auto& d){return d.y;});
+    const auto maxY = max(i_data, [](const auto& d){return d.y;});
     auto result = std::vector<Data>();
-    for (const auto& d : m_data)
-        result.emplace_back(Data{d.x / m_coefficient, d.y / m_coefficient});
+    for (const auto& d : i_data){
+        const auto x = (d.x - minX) / (maxX - minX);
+        const auto y = (d.y - minY) / (maxY - minY);
+        result.emplace_back(Data{x, y});
+    }
     return result;
 }
 
-Utils::Result Utils::Normaliser::unnormalise(const Result& i_result) const
+double Utils::normalise(const std::vector<Data>& i_prior_data, const double x)
 {
-    return { i_result.a * m_coefficient, i_result.b };
+    const auto minX = min(i_prior_data, [](const auto& d){return d.x;});
+    const auto maxX = max(i_prior_data, [](const auto& d){return d.x;});
+    return (x - minX) / (maxX - minX);
+}
+
+double Utils::unnormalise(const std::vector<Data>& i_prior_data, const double y)
+{
+    const auto minY = min(i_prior_data, [](const auto& d){return d.y;});
+    const auto maxY = max(i_prior_data, [](const auto& d){return d.y;});
+    return y * (maxY - minY) + minY;
 }
