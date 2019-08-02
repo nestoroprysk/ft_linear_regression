@@ -14,16 +14,16 @@ std::string getFileToSaveDataFilePathName()
     return Utils::getFullPathToBuildDir(g_file_to_save_path_to_data);
 }
 
-double newA(const std::vector<Utils::Data>& i_data,
+double newA(const std::vector<std::pair<double, double>>& i_data,
                                 const std::pair<double, double>& i_result, const double i_learning_rate)
 {
-    return i_result.first - i_learning_rate * costDerivativeA(i_data, i_result);
+    return i_result.first - i_learning_rate * Utils::costDerivativeA(i_data, i_result);
 }
 
-double newB(const std::vector<Utils::Data>& i_data,
+double newB(const std::vector<std::pair<double, double>>& i_data,
                                 const std::pair<double, double>& i_result, const double i_learning_rate)
 {
-    return i_result.second - i_learning_rate * constDerivativeB(i_data, i_result);
+    return i_result.second - i_learning_rate * Utils::constDerivativeB(i_data, i_result);
 }
 
 }
@@ -91,9 +91,9 @@ void Utils::save(const std::string& i_file_name)
 }
 
 
-std::vector<Utils::Data> Utils::parse(const std::string& i_file_name)
+std::vector<std::pair<double, double>> Utils::parse(const std::string& i_file_name)
 {
-    auto result = std::vector<Data>();
+    auto result = std::vector<std::pair<double, double>>();
     auto file = std::ifstream(i_file_name);
     if (!file)
         throw std::logic_error("Cannot open the file [" + i_file_name + ']');
@@ -103,7 +103,7 @@ std::vector<Utils::Data> Utils::parse(const std::string& i_file_name)
     return result;
 }
 
-Utils::Data Utils::parseLine(const std::string& line)
+std::pair<double, double> Utils::parseLine(const std::string& line)
 {
     return { std::stod(std::string(line.cbegin(),
                 std::find(line.cbegin(), line.cend(), ','))),
@@ -116,31 +116,31 @@ double Utils::h(const double x, const double a, const double b)
 {
     return a + b * x;
 }
-double Utils::cost(const std::vector<Data>& i_data, const double a, const double b)
+double Utils::cost(const std::vector<std::pair<double, double>>& i_data, const double a, const double b)
 {
     return (1.0 / (2.0 * i_data.size())) * 
         std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
             [&](const auto init, const auto d)
-                { return init + std::pow(h(d.x, a, b) - d.y, 2); } );
+                { return init + std::pow(h(d.first, a, b) - d.second, 2); } );
 }
 
-double Utils::costDerivativeA(const std::vector<Data>& i_data, const std::pair<double, double>& i_result)
+double Utils::costDerivativeA(const std::vector<std::pair<double, double>>& i_data, const std::pair<double, double>& i_result)
 {
     return (1.0 / i_data.size()) *
         std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
             [&](const auto init, const auto d)
-                { return init + h(d.x, i_result.first, i_result.second) - d.y; } );
+                { return init + h(d.first, i_result.first, i_result.second) - d.second; } );
 }
 
-double Utils::constDerivativeB(const std::vector<Data>& i_data, const std::pair<double, double>& i_result)
+double Utils::constDerivativeB(const std::vector<std::pair<double, double>>& i_data, const std::pair<double, double>& i_result)
 {
     return (1.0 / i_data.size()) *
         std::accumulate(i_data.cbegin(), i_data.cend(), double(0),
             [&](const auto init, const auto d)
-                { return init + (h(d.x, i_result.first, i_result.second) - d.y) * d.x; } );
+                { return init + (h(d.first, i_result.first, i_result.second) - d.second) * d.first; } );
 }
 
-std::optional<std::pair<double, double>> Utils::update(const std::vector<Utils::Data>& i_data,
+std::optional<std::pair<double, double>> Utils::update(const std::vector<std::pair<double, double>>& i_data,
                                             const std::pair<double, double>& i_result, const double i_learning_rate)
 {
     if (std::isinf(i_result.first) || std::isinf(i_result.second))
@@ -164,32 +164,32 @@ double Utils::abs(const double a)
     return a < 0.0 ? -a : a;
 }
 
-std::vector<Utils::Data> Utils::normalise(const std::vector<Data>& i_data)
+std::vector<std::pair<double, double>> Utils::normalise(const std::vector<std::pair<double, double>>& i_data)
 {
-    const auto minX = min(i_data, [](const auto& d){return d.x;});
-    const auto maxX = max(i_data, [](const auto& d){return d.x;});
-    const auto minY = min(i_data, [](const auto& d){return d.y;});
-    const auto maxY = max(i_data, [](const auto& d){return d.y;});
-    auto result = std::vector<Data>();
+    const auto minX = min(i_data, [](const auto& d){return d.first;});
+    const auto maxX = max(i_data, [](const auto& d){return d.first;});
+    const auto minY = min(i_data, [](const auto& d){return d.second;});
+    const auto maxY = max(i_data, [](const auto& d){return d.second;});
+    auto result = std::vector<std::pair<double, double>>();
     for (const auto& d : i_data){
-        const auto x = (d.x - minX) / (maxX - minX);
-        const auto y = (d.y - minY) / (maxY - minY);
-        result.emplace_back(Data{x, y});
+        const auto x = (d.first - minX) / (maxX - minX);
+        const auto y = (d.second - minY) / (maxY - minY);
+        result.emplace_back(x, y);
     }
     return result;
 }
 
-double Utils::normalise(const std::vector<Data>& i_prior_data, const double x)
+double Utils::normalise(const std::vector<std::pair<double, double>>& i_prior_data, const double x)
 {
-    const auto minX = min(i_prior_data, [](const auto& d){return d.x;});
-    const auto maxX = max(i_prior_data, [](const auto& d){return d.x;});
+    const auto minX = min(i_prior_data, [](const auto& d){return d.first;});
+    const auto maxX = max(i_prior_data, [](const auto& d){return d.first;});
     return (x - minX) / (maxX - minX);
 }
 
-double Utils::unnormalise(const std::vector<Data>& i_prior_data, const double y)
+double Utils::unnormalise(const std::vector<std::pair<double, double>>& i_prior_data, const double y)
 {
-    const auto minY = min(i_prior_data, [](const auto& d){return d.y;});
-    const auto maxY = max(i_prior_data, [](const auto& d){return d.y;});
+    const auto minY = min(i_prior_data, [](const auto& d){return d.second;});
+    const auto maxY = max(i_prior_data, [](const auto& d){return d.second;});
     return y * (maxY - minY) + minY;
 }
 
@@ -201,14 +201,14 @@ double Utils::assess(const double x)
     return unnormalise(prior_data, normalised_y);
 }
 
-double Utils::max(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get)
+double Utils::max(const std::vector<std::pair<double, double>>& i_data, const std::function<double(const std::pair<double, double>&)>& i_get)
 {
     return std::accumulate(i_data.cbegin(), i_data.cend(), std::numeric_limits<double>::min(),
         [&](const auto init, const auto& d){ return std::max(init, i_get(d));
     });
 };
 
-double Utils::min(const std::vector<Data>& i_data, const std::function<double(const Data&)>& i_get)
+double Utils::min(const std::vector<std::pair<double, double>>& i_data, const std::function<double(const std::pair<double, double>&)>& i_get)
 {
     return std::accumulate(i_data.cbegin(), i_data.cend(), std::numeric_limits<double>::max(),
         [&](const auto init, const auto& d){ return std::min(init, i_get(d));

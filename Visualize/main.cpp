@@ -16,14 +16,14 @@ const auto collect = [](auto&&... args){
 const auto getFirstPoint = []()->std::pair<double, double>{
     const auto dataFile = Utils::getDataFileFullName();
     const auto prior_data = Utils::parse(dataFile);
-    const auto min_x = Utils::min(prior_data, [](const auto& d){return d.x;});
+    const auto min_x = Utils::min(prior_data, [](const auto& d){return d.first;});
     return { min_x, Utils::assess(min_x) };
 };
 
 const auto getSecondPoint = []()->std::pair<double, double>{
     const auto dataFile = Utils::getDataFileFullName();
     const auto prior_data = Utils::parse(dataFile);
-    const auto max_x = Utils::max(prior_data, [](const auto& d){return d.x;});
+    const auto max_x = Utils::max(prior_data, [](const auto& d){return d.first;});
     return { max_x, Utils::assess(max_x) };
 };
 

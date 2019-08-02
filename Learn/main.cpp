@@ -9,7 +9,7 @@ static constexpr auto g_learning_rate = double(0.0252);
 
 const auto run = [](const auto& i_data){
     auto result = std::pair<double, double>(0, 0);
-    while (auto opt_result = update(i_data, result, g_learning_rate))
+    while (auto opt_result = Utils::update(i_data, result, g_learning_rate))
         result = *opt_result;
     return result;
 };
