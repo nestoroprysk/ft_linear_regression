@@ -25,10 +25,12 @@ int main(const int argc, const char** argv)
             result << ']' << std::endl; 
     }
     catch (const std::logic_error e){
+        std::cout << "Unable to assess" << std::endl;
         std::cout << e.what() << std::endl;
         std::cout << g_usage << std::endl;
     }
     catch(...){
+        std::cout << "Unable to assess" << std::endl;
         std::cout << g_usage << std::endl;
     }
 }

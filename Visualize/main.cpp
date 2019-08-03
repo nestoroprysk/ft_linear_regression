@@ -42,7 +42,13 @@ int main()
             std::to_string(min_x), std::to_string(y_min_x),
             std::to_string(max_x), std::to_string(y_max_x)).c_str());
     }
+    catch (const std::logic_error& e){
+        std::cout << "Unable to visualize" << std::endl;
+        std::cout << e.what() << std::endl;
+        std::cout << "Call to ./Learn expected" << std::endl;
+    }
     catch(...){
         std::cout << "Unable to visualize" << std::endl;
+        std::cout << "Call to ./Learn expected" << std::endl;
     }
 }

@@ -35,3 +35,4 @@ try:
 
 except:
     print("Unable to visualize")
+    print("Call to ./Learn expected")
