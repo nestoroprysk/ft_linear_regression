@@ -7,6 +7,9 @@ namespace {
 static constexpr auto g_usage = R"(
 Usage:
     ./Assess x
+
+Note:
+    call ./Learn so as to enable the assessment
 )";
 
 }
