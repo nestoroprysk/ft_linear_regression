@@ -17,8 +17,9 @@ int main(const int argc, const char** argv)
         if (argc != 2)
             throw std::out_of_range("Single argument expected");
         const auto x = std::stod(argv[1]);
+        const auto result = Utils::assess(x);
         std::cout << "for [" << x << "] y is [" <<
-            Utils::assess(x) << ']' << std::endl; 
+            result << ']' << std::endl; 
     }
     catch (const std::logic_error e){
         std::cout << e.what() << std::endl;
