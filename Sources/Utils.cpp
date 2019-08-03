@@ -165,6 +165,20 @@ std::optional<Pair> Utils::update(const List& i_xs, const List& i_ys,
     return Pair{a, b};
 }
 
+double Utils::assess(const double x)
+{
+    const auto [xs, ys] = parse(getDataFileFullName());
+    const auto [a, b] = getCoefficients();
+    const auto normalised_y = h(normalise(xs, x), a, b);
+    return unnormalise(ys, normalised_y);
+}
+
+double Utils::precision(const double a, const double b)
+{
+    const auto [xs, ys] = parse(getDataFileFullName());
+    return cost(normalise(xs), normalise(ys), a, b);
+}
+
 bool Utils::eq(const double a, const double b)
 {
     return abs(a - b) < e || abs(b - a) < e;
@@ -173,6 +187,22 @@ bool Utils::eq(const double a, const double b)
 double Utils::abs(const double a)
 {
     return a < 0.0 ? -a : a;
+}
+
+double Utils::max(const List& i_data)
+{
+    return std::accumulate(i_data.cbegin(), i_data.cend(),
+        std::numeric_limits<double>::min(),
+        [](const auto init, const auto& d){ return std::max(init, d);
+    });
+}
+
+double Utils::min(const List& i_data)
+{
+    return std::accumulate(i_data.cbegin(), i_data.cend(),
+        std::numeric_limits<double>::max(),
+        [](const auto init, const auto& d){ return std::min(init, d);
+    });
 }
 
 List Utils::normalise(const List& i_data)
@@ -197,34 +227,4 @@ double Utils::unnormalise(const List& i_prior_data, const double n)
     const auto minimum = min(i_prior_data);
     const auto maximum = max(i_prior_data);
     return n * (maximum - minimum) + minimum;
-}
-
-double Utils::assess(const double x)
-{
-    const auto [xs, ys] = parse(getDataFileFullName());
-    const auto [a, b] = getCoefficients();
-    const auto normalised_y = h(normalise(xs, x), a, b);
-    return unnormalise(ys, normalised_y);
-}
-
-double Utils::max(const List& i_data)
-{
-    return std::accumulate(i_data.cbegin(), i_data.cend(),
-        std::numeric_limits<double>::min(),
-        [](const auto init, const auto& d){ return std::max(init, d);
-    });
-};
-
-double Utils::min(const List& i_data)
-{
-    return std::accumulate(i_data.cbegin(), i_data.cend(),
-        std::numeric_limits<double>::max(),
-        [](const auto init, const auto& d){ return std::min(init, d);
-    });
-};
-
-double Utils::precision(const double a, const double b)
-{
-    const auto [xs, ys] = parse(getDataFileFullName());
-    return cost(normalise(xs), normalise(ys), a, b);
 }
